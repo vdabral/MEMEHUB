@@ -1,90 +1,137 @@
 # MemeHub
 
-MemeHub is a next-gen meme-sharing platform designed to empower users to create, share, and track their memes while engaging with a vibrant community. This README provides an overview of the project, its features, and how to set it up.
-
-## Features
-
-- **Meme Creation Studio**: Users can create custom memes using a built-in studio with options to upload images, add text, and customize styles. An AI Caption Generator suggests captions based on the image or text input.
-  
-- **Voting, Commenting & Tagging**: Users can interact with memes through an upvote/downvote system, comment on memes, and add tags. AI can also auto-tag memes for better discoverability.
-
-- **Meme Feed & Search**: Explore memes through various feed tabs (New, Top (24h), Top (Week), Top (All Time)) and search by hashtags or captions.
-
-- **Meme Performance Analytics**: Each meme displays performance metrics such as total views, net votes, and engagement trends over time.
-
-- **User Dashboard**: Users can manage their memes, view statistics, and sort their creations by popularity or date.
-
-- **Highlights & Competitive Edge**: Features like "Meme of the Day," a weekly leaderboard, and a badge system encourage user engagement and competition.
-
-- **Optional Features**: Advanced functionalities such as scheduling meme drops, personalized feeds, and a content moderation dashboard for admins.
-
-## Technologies Used
-
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB with Mongoose
-- **Authentication**: JWT for secure user sessions
-- **AI Integration**: Gemini AI API for caption suggestions
-
-## Installation
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/memehub.git
-   ```
-
-2. Navigate to the project directory:
-   ```
-   cd memehub
-   ```
-
-3. Install dependencies:
-   ```
-   npm install
-   ```
-
-4. Create a `.env` file in the root directory and add your MongoDB connection string and Gemini AI API key:
-   ```
-   # MongoDB connection URI
-MONGODB_URI=your_mongodb_connection_string
-
-# Google Gemini API Key (if you're using AI features)
-GEMINI_API_KEY=your_gemini_api_key
-
-# JWT secret for authentication
-JWT_SECRET=your_jwt_secret_key
-
-# Server port
-PORT=5001
-
-# Cloudinary configuration (for image uploads)
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
-# Toggle AI debugging (true or false)
-DEBUG_AI=false
-
-   ```
-
-5. Start the server:
-   ```
-   node server.js
-   ```
-
-## Usage
-
-- Access the application in your browser at `http://localhost:5001`.
-- Users can register, log in, create memes, and interact with the community.
-- Guests can browse memes without needing an account.
-
-## Contributing
-
-Contributions are welcome! Please submit a pull request or open an issue for any suggestions or improvements.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+MemeHub is a next-generation meme-sharing platform where users can create, share, and discover memes, engage with a vibrant community, and track their meme's rise to viral fame. Built for meme lovers and creators, MemeHub combines a modern UI, AI-powered features, and robust backend services for a seamless experience.
 
 ---
 
-For more information, visit the [GitHub repository](https://github.com/vdabral/MEMEHUB). Enjoy creating and sharing memes!
+## 🚀 Live Demo
+- **Frontend (Netlify):** [https://memehubcore.netlify.app/](https://memehubcore.netlify.app/)
+- **Backend (Render):** [https://memehub-erj0.onrender.com](https://memehub-erj0.onrender.com)
+
+---
+
+## 📝 Project Overview
+MemeHub allows users to:
+- Create memes using uploaded images or popular templates
+- Add custom text overlays and AI-generated captions/tags
+- Save/bookmark favorite memes
+- View, upvote, comment, and share memes
+- Explore trending, new, and top memes
+- Manage their profile and meme collection
+
+---
+
+## ✨ Key Features & Technologies
+- **Frontend:** React, TypeScript, Tailwind CSS, Vite
+- **Backend:** Node.js, Express, MongoDB, Mongoose
+- **Image Hosting:** Cloudinary (direct upload from frontend)
+- **Authentication:** JWT-based, secure user sessions
+- **AI Integration:** Caption and tag suggestions
+- **Other:** Framer Motion, Sonner (toasts), Lucide Icons
+
+---
+
+## 📦 Setup Instructions
+
+### Prerequisites
+- Node.js (v16+ recommended)
+- npm or yarn
+- MongoDB Atlas or local MongoDB instance
+- Cloudinary account (for image uploads)
+
+### 1. Clone the Repository
+```bash
+git clone <your-repo-url>
+cd Main
+```
+
+### 2. Backend Setup
+```bash
+cd Backend
+npm install
+# Create a .env file with your MongoDB URI, JWT secret, and Cloudinary credentials
+cp .env.example .env
+# Edit .env with your values
+npm run dev
+```
+
+### 3. Frontend Setup
+```bash
+cd ../frontend/memehub
+npm install
+# Create a .env file for Vite (see .env.example)
+cp .env.example .env
+# Edit .env with your API base URL if needed
+npm run dev
+```
+
+### 4. Access the App
+- Frontend: [http://localhost:5173](http://localhost:5173)
+- Backend: [http://localhost:8080](http://localhost:8080)
+
+---
+
+## 🏗️ Project Structure
+
+```
+Main/
+│
+├── README.md                # Main project overview and instructions
+│
+├── Backend/
+│   ├── package.json
+│   ├── README.md
+│   ├── server.js
+│   ├── uploads/             # (for legacy/local uploads, not used in Cloudinary flow)
+│   └── src/
+│       ├── app.js
+│       ├── config/
+│       ├── controllers/
+│       ├── middleware/
+│       ├── models/
+│       ├── routes/
+│       ├── scripts/
+│       ├── services/
+│       ├── utils/
+│       └── views/
+│
+└── frontend/
+    └── memehub/
+        ├── package.json
+        ├── vite.config.ts
+        ├── public/
+        └── src/
+            ├── App.tsx
+            ├── main.tsx
+            ├── index.css
+            ├── assets/
+            ├── components/
+            ├── contexts/
+            ├── hooks/
+            ├── lib/
+            ├── pages/
+            └── services/
+```
+
+---
+
+## 🏗️ Department-Specific Focus: Software Development (SD)
+- **Deployed Application:** [https://memehubcore.netlify.app/](https://memehubcore.netlify.app/)
+- **Backend API:** [https://memehub-erj0.onrender.com](https://memehub-erj0.onrender.com)
+- All links are functional and included above.
+
+---
+
+## 📹 Video Presentation
+_Add your video presentation link here._
+
+---
+
+## 🤝 Contributing
+Pull requests and suggestions are welcome! Please open an issue or submit a PR for improvements.
+
+## 📄 License
+This project is licensed under the MIT License.
+
+---
+Enjoy creating and sharing memes on MemeHub!
