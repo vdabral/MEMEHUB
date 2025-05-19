@@ -13,8 +13,22 @@ const register = async (req, res) => {
     await newUser.save();
     console.timeEnd("User creation");
 
-    console.log("User registered successfully");
-    res.status(201).json({ message: "User registered successfully" });
+    // Generate JWT token for the new user
+    const token = generateToken(newUser._id);
+
+    // Return user object and token for frontend compatibility
+    res.status(201).json({
+      message: "Registration successful",
+      token,
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email,
+        avatar: newUser.avatar,
+        bio: newUser.bio,
+        createdAt: newUser.createdAt,
+      },
+    });
   } catch (error) {
     console.error("Error in register endpoint (full error):", error);
     res.status(500).json({

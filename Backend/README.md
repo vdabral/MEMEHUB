@@ -44,8 +44,26 @@ MemeHub is a next-gen meme-sharing platform designed to empower users to create,
 
 4. Create a `.env` file in the root directory and add your MongoDB connection string and Gemini AI API key:
    ```
-   MONGODB_URI=your_mongodb_connection_string
-   GEMINI_API_KEY=your_gemini_api_key
+   # MongoDB connection URI
+MONGODB_URI=your_mongodb_connection_string
+
+# Google Gemini API Key (if you're using AI features)
+GEMINI_API_KEY=your_gemini_api_key
+
+# JWT secret for authentication
+JWT_SECRET=your_jwt_secret_key
+
+# Server port
+PORT=5001
+
+# Cloudinary configuration (for image uploads)
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+# Toggle AI debugging (true or false)
+DEBUG_AI=false
+
    ```
 
 5. Start the server:
@@ -55,7 +73,7 @@ MemeHub is a next-gen meme-sharing platform designed to empower users to create,
 
 ## Usage
 
-- Access the application in your browser at `http://localhost:3000`.
+- Access the application in your browser at `http://localhost:5001`.
 - Users can register, log in, create memes, and interact with the community.
 - Guests can browse memes without needing an account.
 
@@ -69,4 +87,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 
 ---
 
-For more information, visit the [GitHub repository](https://github.com/yourusername/memehub). Enjoy creating and sharing memes!
+For more information, visit the [GitHub repository](https://github.com/vdabral/MEMEHUB). Enjoy creating and sharing memes!

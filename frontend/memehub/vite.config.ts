@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     proxy: {
       '/api': {
-        target: 'http://localhost:5001', // Render backend root URL
+        target: 'https://memehub-erj0.onrender.com', // Render backend root URL
         changeOrigin: true,
         secure: false,
         // If your backend expects /api prefix, comment out the rewrite below.
