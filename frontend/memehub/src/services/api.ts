@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 
-const API_URL = 'http://localhost:5001/api';
+// Use environment variable for API base URL, fallback to /api for dev proxy
+const API_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 // Helper function to handle API responses
 async function handleResponse(response: Response) {

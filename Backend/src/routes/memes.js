@@ -30,7 +30,6 @@ const upload = multer({
 router.post(
   "/",
   authMiddleware,
-  upload.single("image"),
   limiter,
   memeController.createMeme
 );

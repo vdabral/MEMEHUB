@@ -265,29 +265,43 @@ export default function CreateMeme() {
     try {
       setIsSubmitting(true);
       toast.loading('Creating your meme...');
-      
+
+      // 1. Upload to Cloudinary (if not already a Cloudinary URL)
+      let imageUrl = '';
+      if (image) {
+        imageUrl = await uploadImageToCloudinary(image);
+      } else if (selectedTemplate) {
+        // If template is already a Cloudinary URL, use as is; otherwise, upload
+        if (selectedTemplate.includes('res.cloudinary.com')) {
+          imageUrl = selectedTemplate;
+        } else {
+          // Fetch template image, convert to File, upload to Cloudinary
+          const response = await fetch(selectedTemplate);
+          const blob = await response.blob();
+          let fileType = 'image/jpeg';
+          if (blob.type && blob.type.startsWith('image/')) fileType = blob.type;
+          const file = new File([blob], 'template-meme.jpg', { type: fileType });
+          imageUrl = await uploadImageToCloudinary(file);
+        }
+      }
+
       const tags = tagsInput
         .split(',')
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0);
-      
-      const formData = new FormData();
-      if (image) {
-        formData.append('image', image);
-      } else if (selectedTemplate) {
-        const response = await fetch(selectedTemplate);
-        const blob = await response.blob();
-        const file = new File([blob], 'template-meme.jpg', { type: blob.type });
-        formData.append('image', file);
-      }
-      formData.append('title', title);
-      formData.append('tags', JSON.stringify(tags));
-      
+
       // Convert the extended text overlays to the format expected by the API
       const apiTextOverlays = textOverlays.map(({ stroke, strokeColor, ...overlay }) => overlay);
-      formData.append('textOverlays', JSON.stringify(apiTextOverlays));
-      
-      const result = await memeService.createMeme(formData);
+
+      // 2. Send meme data to backend (JSON, not FormData)
+      const memePayload = {
+        title,
+        imageUrl,
+        tags,
+        textOverlays: apiTextOverlays,
+      };
+      console.log('Submitting memePayload:', memePayload);
+      const result = await memeService.createMeme(memePayload);
       toast.dismiss();
       toast.success('Meme created successfully!');
       navigate(`/memes/${result.id}`);

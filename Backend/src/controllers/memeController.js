@@ -16,6 +16,55 @@ cloudinary.config({
 // Create a new meme
 const createMeme = async (req, res) => {
   try {
+    // If the request is JSON with imageUrl, use that (direct Cloudinary upload from frontend)
+    if (req.body && req.body.imageUrl) {
+      const { imageUrl, title, tags, textOverlays } = req.body;
+      if (!imageUrl || !title) {
+        return res.status(400).json({
+          message: "Image URL and title are required.",
+          code: "MEME_MISSING_REQUIRED_FIELDS",
+        });
+      }
+      // Defensive: parse tags/textOverlays if needed
+      let parsedTags = tags;
+      let parsedTextOverlays = textOverlays;
+      if (typeof parsedTags === "string") {
+        try { parsedTags = JSON.parse(parsedTags); } catch { parsedTags = []; }
+      }
+      if (!Array.isArray(parsedTags)) parsedTags = [];
+      if (typeof parsedTextOverlays === "string") {
+        try { parsedTextOverlays = JSON.parse(parsedTextOverlays); } catch { parsedTextOverlays = []; }
+      }
+      if (!Array.isArray(parsedTextOverlays)) parsedTextOverlays = [];
+      // Create meme in DB
+      const meme = new Meme({
+        image: imageUrl,
+        cloudinaryId: null, // Not available from direct upload
+        title: title.trim(),
+        creator: req.user.id,
+        tags: parsedTags,
+        textOverlays: parsedTextOverlays,
+      });
+      await meme.save();
+      // Tag upsert logic (if needed)
+      if (Array.isArray(parsedTags) && parsedTags.length > 0) {
+        for (const tagName of parsedTags) {
+          if (typeof tagName !== "string" || !tagName.trim()) continue;
+          await Tag.findOneAndUpdate(
+            { name: tagName.trim() },
+            { $addToSet: { memes: meme._id } },
+            { upsert: true, new: true }
+          );
+        }
+      }
+      await User.findByIdAndUpdate(req.user.id, { $inc: { memesCreated: 1 } });
+      const memeObj = meme.toObject();
+      memeObj.id = memeObj._id;
+      delete memeObj._id;
+      if (!Array.isArray(memeObj.comments)) memeObj.comments = [];
+      return res.status(201).json(memeObj);
+    }
+
     // Debug: log req.body and req.file
     console.log("[MEME CREATE] req.body:", req.body);
     console.log("[MEME CREATE] req.file:", req.file);
@@ -159,26 +208,19 @@ const createMeme = async (req, res) => {
       });
     }
   } catch (error) {
-    // Clean up temp file if possible
-    if (req.file && req.file.path) {
-      await fs.unlink(req.file.path).catch(() => {});
-    }
-    if (req.files && Array.isArray(req.files)) {
-      for (const f of req.files) {
-        if (f && f.path) await fs.unlink(f.path).catch(() => {});
-      }
-    }
-    console.error("[MEME CREATE] General error:", error);
+    // Enhanced error logging for debugging
+    console.error("[MEME CREATE] Internal Server Error:", {
+      error: error,
+      message: error.message,
+      stack: error.stack,
+      reqBody: req.body,
+      reqUser: req.user,
+    });
     res.status(500).json({
       message: "Error creating meme",
       code: "MEME_CREATE_ERROR",
       error: error.message,
       stack: error.stack,
-      debug: {
-        reqBody: req.body,
-        reqFile: req.file,
-        reqFiles: req.files,
-      },
     });
   }
 };
@@ -439,12 +481,16 @@ const removeVote = async (req, res) => {
   try {
     const meme = await Meme.findById(req.params.id);
     if (!meme) {
-      return res.status(404).json({ message: "Meme not found", code: "MEME_NOT_FOUND" });
+      return res
+        .status(404)
+        .json({ message: "Meme not found", code: "MEME_NOT_FOUND" });
     }
     const userId = req.user.id;
     // Remove user from upvotedBy and downvotedBy
     meme.upvotedBy = meme.upvotedBy.filter((id) => id.toString() !== userId);
-    meme.downvotedBy = meme.downvotedBy.filter((id) => id.toString() !== userId);
+    meme.downvotedBy = meme.downvotedBy.filter(
+      (id) => id.toString() !== userId
+    );
     meme.upvotes = meme.upvotedBy.length;
     meme.downvotes = meme.downvotedBy.length;
     await meme.save();

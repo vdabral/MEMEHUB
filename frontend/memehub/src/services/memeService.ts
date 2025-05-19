@@ -115,8 +115,13 @@ const memeService = {
   },
 
   // Create a new meme
-  async createMeme(formData: FormData): Promise<Meme> {
-    const data = await api.postFormData('/memes', formData);
+  async createMeme(memePayload: {
+    title: string;
+    imageUrl: string;
+    tags: string[];
+    textOverlays?: TextOverlay[];
+  }): Promise<Meme> {
+    const data = await api.post('/memes', memePayload);
     return normalizeMeme(data);
   },
 

@@ -12,7 +12,7 @@ const memeSchema = new mongoose.Schema({
   },
   cloudinaryId: {
     type: String,
-    required: true,
+    required: false, // Now optional for direct Cloudinary uploads
   },
   textOverlays: [
     {
