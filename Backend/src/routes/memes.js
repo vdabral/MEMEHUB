@@ -69,6 +69,14 @@ router.post(
   memeController.downvoteMeme
 );
 
+// Remove a user's vote (upvote or downvote) from a meme (rate limited)
+router.post(
+  "/:id/remove-vote",
+  authMiddleware,
+  limiter,
+  memeController.removeVote
+);
+
 // Comment on a meme (rate limited)
 router.post(
   "/:id/comments",

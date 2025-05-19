@@ -6,11 +6,11 @@ type CaptionResponse = { caption: string };
 type TagsResponse = { tags: string[] };
 
 export async function getAICaption(imageUrl: string): Promise<string> {
-  const { caption } = await api.post<CaptionResponse>('/ai/caption', { imageUrl });
+  const { caption } = await api.post('/ai/caption', { imageUrl });
   return caption;
 }
 
 export async function getAITags(text: string): Promise<string[]> {
-  const { tags } = await api.post<TagsResponse>('/ai/tags', { text });
+  const { tags } = await api.post('/ai/tags', { text });
   return tags;
 }

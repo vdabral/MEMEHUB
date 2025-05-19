@@ -434,6 +434,36 @@ const downvoteMeme = async (req, res) => {
   }
 };
 
+// Remove a user's vote (upvote or downvote) from a meme
+const removeVote = async (req, res) => {
+  try {
+    const meme = await Meme.findById(req.params.id);
+    if (!meme) {
+      return res.status(404).json({ message: "Meme not found", code: "MEME_NOT_FOUND" });
+    }
+    const userId = req.user.id;
+    // Remove user from upvotedBy and downvotedBy
+    meme.upvotedBy = meme.upvotedBy.filter((id) => id.toString() !== userId);
+    meme.downvotedBy = meme.downvotedBy.filter((id) => id.toString() !== userId);
+    meme.upvotes = meme.upvotedBy.length;
+    meme.downvotes = meme.downvotedBy.length;
+    await meme.save();
+    res.status(200).json({
+      upvotes: meme.upvotes,
+      downvotes: meme.downvotes,
+      upvotedBy: meme.upvotedBy,
+      downvotedBy: meme.downvotedBy,
+    });
+  } catch (error) {
+    console.error("Error removing vote:", error);
+    res.status(500).json({
+      message: "Error removing vote",
+      code: "MEME_REMOVE_VOTE_ERROR",
+      error: error.message,
+    });
+  }
+};
+
 // Comment on a meme
 const commentOnMeme = async (req, res) => {
   try {
@@ -598,6 +628,7 @@ module.exports = {
   deleteMeme,
   upvoteMeme,
   downvoteMeme,
+  removeVote,
   commentOnMeme,
   getCommentsForMeme,
   tagMeme,

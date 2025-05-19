@@ -39,6 +39,7 @@ import { uploadImageToCloudinary } from '../services/imageUploadService';
 import memeTemplates from '../assets/memeTemplates';
 import TextOverlayDialog from '@/components/TextOverlayDialog';
 import MemeTemplateDialog from '@/components/MemeTemplateDialog';
+import { cleanCaption } from '@/lib/utils';
 import './CreateMeme.css';
 
 // Extend the TextOverlay interface for local use
@@ -207,7 +208,7 @@ export default function CreateMeme() {
         options = [captionRaw];
       }
       // Clean up: remove leading *, quotes, and whitespace
-      options = options.map(caption => caption.replace(/^\*+\s*/, '').replace(/^"|"$/g, '').trim()).filter(Boolean);
+      options = options.map(caption => cleanCaption(caption)).filter(Boolean);
       setAiCaptions(options.slice(0, 5));
       setShowCaptionSuggestions(true);
       toast.dismiss();
@@ -579,14 +580,14 @@ export default function CreateMeme() {
                         key={idx} 
                         className="relative p-2 border border-transparent hover:border-purple-200 rounded-md bg-white"
                       >
-                        <p className="pr-20 text-sm">{caption}</p>
+                        <p className="pr-20 text-sm">{cleanCaption(caption)}</p>
                         <Button
                           type="button" 
                           variant="ghost" 
                           size="sm"
                           className="absolute right-2 top-1/2 transform -translate-y-1/2"
                           onClick={() => {
-                            setTitle(caption);
+                            setTitle(cleanCaption(caption));
                             setShowCaptionSuggestions(false);
                             setAiCaptions([]);
                             toast.success('Caption applied!');

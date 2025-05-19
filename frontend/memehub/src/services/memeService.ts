@@ -143,6 +143,11 @@ const memeService = {
     return await api.post(`/memes/${id}/downvote`, {});
   },
 
+  // Remove a user's vote from a meme
+  async removeVote(id: string): Promise<{ upvotes: number; downvotes: number }> {
+    return await api.post(`/memes/${id}/remove-vote`, {});
+  },
+
   // Get comments for a meme
   async getMemeComments(id: string): Promise<Comment[]> {
     const data = await api.get(`/memes/${id}/comments`);
