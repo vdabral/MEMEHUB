@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MemeHub</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>MemeHub</h1>
+        <nav>
+            <ul>
+                <li><a href="#create">Create Meme</a></li>
+                <li><a href="#trending">Trending Memes</a></li>
+                <li><a href="#leaderboard">Leaderboard</a></li>
+                <li><a href="#login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="create">
+            <h2>Create Your Meme</h2>
+            <form id="memeForm">
+                <input type="file" id="imageUpload" accept="image/*" required>
+                <input type="text" id="topText" placeholder="Top Text" required>
+                <input type="text" id="bottomText" placeholder="Bottom Text" required>
+                <button type="submit">Create Meme</button>
+            </form>
+        </section>
+        <section id="trending">
+            <h2>Trending Memes</h2>
+            <div id="memeFeed"></div>
+        </section>
+        <section id="leaderboard">
+            <h2>Leaderboard</h2>
+            <div id="leaderboardList"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 MemeHub. All rights reserved.</p>
+    </footer>
+</body>
+</html>
